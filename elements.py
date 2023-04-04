@@ -32,7 +32,7 @@ class UniformElement(AccElement):
         ])
       
 class Quadrupole(UniformElement):
-    def __init__(self, K1=0, *args, **kwargs):
+    def __init__(self, *args, K1=0, **kwargs):
         super().__init__(*args, **kwargs)
         self.K1 = K1 # 1/m^2 -- geometric strength of quadrupole
         self.type_name = "Quadrupole"
