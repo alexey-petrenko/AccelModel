@@ -36,8 +36,6 @@ class Quadrupole(UniformElement):
         super().__init__(*args, **kwargs)
         self.K1 = K1 # 1/m^2 -- geometric strength of quadrupole
         self.type_name = "Quadrupole"
-        
-        print(f"args={args}, kwargs={kwargs}")
 
     def M(self, L=None):
         if L is None: L = self.L
