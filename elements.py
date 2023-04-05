@@ -80,3 +80,39 @@ class Quadrupole(UniformElement):
             ])
         
         return None
+
+class Solenoid(UniformElement):
+    def __init__(self, K=0, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.K = K # 1/m
+        self.type_name = "Solenoid"
+
+    def M(self, L=None):
+
+        if L is None: L = self.L
+
+        K = self.K
+
+        if K == 0:
+            return np.matrix([
+                [1, L, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0, 0],
+                [0, 0, 1, L, 0, 0],
+                [0, 0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 0, 1]
+            ])
+
+
+        S = np.sin(K*L)
+        C = np.cos(K*L)
+
+        return np.matrix([
+            [ C**2,   (S*C)/K,  S*C,   (S**2)/K, 0, 0],
+            [-K*S*C,   C**2,   -K*S**2, S*C,     0, 0],
+            [-S*C,   -(S**2)/K, C**2,  (S*C)/K , 0, 0],
+            [ K*S**2, -S*C,    -K*S*C,  C**2,    0, 0],
+            [ 0,       0,       0,      0,       0, 0],
+            [ 0,       0,       0,      0,       0, 0]
+        ])
+
