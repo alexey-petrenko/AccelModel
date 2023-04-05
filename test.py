@@ -12,5 +12,10 @@ Sol1 = am.Solenoid(L=0.5, K=1.4, name="Sol1", s=1.2)
 print(f"{Sol1.type_name}: name={Sol1.name}, K={Sol1.K} 1/m, location={Sol1.s} m")
 print(f"Sol1 matrix = \n{Sol1.M()}\n")
 
+S_bend1 = am.Sector_bend(L=0.6, h=0.2, name="S_bend1", s=2)
+print(f"{S_bend1.type_name}: name={S_bend1.name}, h={S_bend1.h} 1/m, location={S_bend1.s} m")
+print(f"S_bend1 matrix = \n{S_bend1.M()}\n")
+
+
 #input("Press Enter to Exit.")
 

@@ -85,7 +85,7 @@ class Quadrupole(DivisibleElement):
 class Solenoid(DivisibleElement):
     def __init__(self, K=0, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.K = K # 1/m
+        self.K = K # 1/m geometrical strength of solenoid
         self.type_name = "Solenoid"
 
     def M(self, l=None):
@@ -117,3 +117,35 @@ class Solenoid(DivisibleElement):
             [ 0,       0,       0,      0,       0, 0]
         ])
 
+class Sector_bend(AccElement):
+    #Uniform sector bend
+    def __init__(self, *args, h=0, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.h = h #1/m geometrical strenght of sector bending magnet
+        self.type_name = "Sector Bend"
+
+    def M(self, L=None):
+        if L is None: L = self.L
+
+        h = self.h
+        if h == 0: return np.matrix([
+                       [1, l, 0, 0, 0, 0],
+                       [0, 1, 0, 0, 0, 0],
+                       [0, 0, 1, l, 0, 0],
+                       [0, 0, 0, 1, 0, 0],
+                       [0, 0, 0, 0, 1, 0],
+                       [0, 0, 0, 0, 0, 1],
+                    ])
+
+        alpha = h * L
+        C = np.cos(alpha)
+        S = np.sin(alpha)
+
+        return np.matrix([
+            [ C,   S/h,      0, 0, 0,       (1-C)/h], 
+            [-h*S, C,        0, 0, 0,             S], 
+            [ 0,   0,        1, L, 0,             0], 
+            [ 0,   0,        0, 1, 0,             0], 
+            [ S,  (1 - C)/h, 0, 0, 1, (alpha - S)/h], 
+            [ 0,   0,        0, 0, 0,             1], 
+        ])      
