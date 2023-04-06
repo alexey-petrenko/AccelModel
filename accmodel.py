@@ -12,23 +12,11 @@ class AccElement:
         return self.s < other.s
     
     def __str__(self):
-        return self.name
+        return f"{self.type_name}.{self.name}"
 
     def __repr__(self):
         return f"{self.type_name}.{self.name}"
     
-    def M(self):
-        L = self.L
-        return np.matrix([
-            [1, L, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0, 0],
-            [0, 0, 1, L, 0, 0],
-            [0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 1, 0],
-            [0, 0, 0, 0, 0, 1]
-        ])
-
-class DivisibleElement(AccElement):
     def M(self, l=None):
         # l is the distance to the element start (inside the element)
         if l is None: l = self.L
@@ -42,7 +30,7 @@ class DivisibleElement(AccElement):
             [0, 0, 0, 0, 0, 1]
         ])
       
-class Quadrupole(DivisibleElement):
+class Quadrupole(AccElement):
     def __init__(self, *args, K1=0, **kwargs):
         super().__init__(*args, **kwargs)
         self.K1 = K1 # 1/m^2 -- geometric strength of quadrupole
@@ -92,7 +80,7 @@ class Quadrupole(DivisibleElement):
         
         return None
 
-class Solenoid(DivisibleElement):
+class Solenoid(AccElement):
     def __init__(self, *args, K=0, **kwargs):
         super().__init__(*args, **kwargs)
         self.K = K # 1/m geometrical strength of solenoid
@@ -165,7 +153,8 @@ class Beamline(list):
         super().__init__(*args, **kwargs)
         self.name = name # the name of the beamline
     
-    def M(s1,s2):
-        # returns matrix from s1 to s2 (s2 can be less than s1)
+    def M(self, s1, s2):
+        # returns the transport matrix from s1 to s2 (s2 can be less than s1)
+        # s2 could be also a list of values
         
         return None
