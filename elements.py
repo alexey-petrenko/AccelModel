@@ -2,9 +2,9 @@ import numpy as np
 
 class AccElement:
     def __init__(self, L=0, s=0, name=None):
-        self.L  = L # m
-        self.s = s  # m -- location of the element center along the beamline
-        self.name = name
+        self.L         = L # m
+        self.s         = s  # m -- location of the element center along the beamline
+        self.name      = name
         self.type_name = None
         
     def M(self):
@@ -35,7 +35,7 @@ class DivisibleElement(AccElement):
 class Quadrupole(DivisibleElement):
     def __init__(self, *args, K1=0, **kwargs):
         super().__init__(*args, **kwargs)
-        self.K1 = K1 # 1/m^2 -- geometric strength of quadrupole
+        self.K1        = K1 # 1/m^2 -- geometric strength of quadrupole
         self.type_name = "Quadrupole"
 
     def M(self, l=None):
@@ -85,7 +85,7 @@ class Quadrupole(DivisibleElement):
 class Solenoid(DivisibleElement):
     def __init__(self, K=0, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.K = K # 1/m geometrical strength of solenoid
+        self.K         = K # 1/m geometrical strength of solenoid
         self.type_name = "Solenoid"
 
     def M(self, l=None):
@@ -121,7 +121,7 @@ class Sector_bend(DivisibleElement):
     #Uniform sector bend
     def __init__(self, *args, alpha=0, **kwargs):
         super().__init__(*args, **kwargs)
-        self.alpha = alpha #rad, the angle of bend of central orbit
+        self.alpha     = alpha #rad, the angle of bend of central orbit
         self.type_name = "Sector Bend"
 
     def M(self, l=None):
@@ -149,3 +149,16 @@ class Sector_bend(DivisibleElement):
             [ S,            alpha*(1 - C)/l, 0, 0, 1, (alpha - S)*alpha/l], 
             [ 0,            0,               0, 0, 0,                   1], 
         ])      
+
+class Beamline():
+    def __init__(self, elems_tuple, beam_params, name):
+        self.elems_tuple = elems_tuple
+        self.beam_params = beam_params
+        self.name        = name
+        self.type_name   = "Beamline"
+
+    def beam_tracking(self, beam_params=None, start_pos=0, end_pos=None):
+        elems_tuple = self.elems_tuple
+
+        if beam_params is None: beam_params = self.beam_params
+        if end_pos     is None: end_pos = len(elems_tuple)
