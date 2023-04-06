@@ -37,7 +37,10 @@ chan.sort()
 print(chan)
 
 s2, s1 = [0,1], 2
-tracking_matrixes_from_Beamline = chan.M(s1, s2)
+
+chan.M(s1, s2)
+
+tracking_matrixes_from_Beamline = chan.matrixes_dict
 
 tracking_matrix_handmade0 = np.matmul(chan[2].M(), chan[1].M())
 tracking_matrix_handmade1 = np.matmul(tracking_matrix_handmade0, chan[0].M()) 
