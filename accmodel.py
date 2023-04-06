@@ -2,7 +2,7 @@ import numpy as np
 
 class AccElement:
     def __init__(self, L=0, s=0, name=None):
-        self.L  = L # m
+        self.L = L # m
         self.s = s  # m -- location of the element center along the beamline
         self.name = name
         self.type_name = None
@@ -83,7 +83,7 @@ class Quadrupole(DivisibleElement):
         return None
 
 class Solenoid(DivisibleElement):
-    def __init__(self, K=0, *args, **kwargs):
+    def __init__(self, *args, K=0, **kwargs):
         super().__init__(*args, **kwargs)
         self.K = K # 1/m
         self.type_name = "Solenoid"
@@ -117,3 +117,12 @@ class Solenoid(DivisibleElement):
             [ 0,       0,       0,      0,       0, 0]
         ])
 
+class Beamline(list):
+    def __init__(self, *args, name=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name # the name of the beamline
+    
+    def M(s1,s2):
+        # returns matrix from s1 to s2 (s2 can be less than s1)
+        
+        return None
