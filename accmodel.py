@@ -33,7 +33,7 @@ class AccElement:
 class Quadrupole(AccElement):
     def __init__(self, *args, K1=0, **kwargs):
         super().__init__(*args, **kwargs)
-        self.K1 = K1 # 1/m^2 -- geometric strength of quadrupole
+        self.K1        = K1 # 1/m^2 -- geometric strength of quadrupole
         self.type_name = "Quadrupole"
 
     def M(self, l=None):
@@ -83,7 +83,7 @@ class Quadrupole(AccElement):
 class Solenoid(AccElement):
     def __init__(self, *args, K=0, **kwargs):
         super().__init__(*args, **kwargs)
-        self.K = K # 1/m
+        self.K         = K # 1/m geometrical strength of solenoid
         self.type_name = "Solenoid"
 
     def M(self, l=None):
@@ -115,13 +115,64 @@ class Solenoid(AccElement):
             [ 0,       0,       0,      0,       0, 0]
         ])
 
+class SectorBend(AccElement):
+    #Uniform sector bend
+    def __init__(self, *args, alpha=0, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.alpha     = alpha #rad, the angle of bend of central orbit
+        self.type_name = "Sector Bend"
+
+    def M(self, l=None):
+        if l is None: l = self.L
+
+        alpha = self.alpha
+        if alpha == 0: return np.matrix([
+                       [1, l, 0, 0, 0, 0],
+                       [0, 1, 0, 0, 0, 0],
+                       [0, 0, 1, l, 0, 0],
+                       [0, 0, 0, 1, 0, 0],
+                       [0, 0, 0, 0, 1, 0],
+                       [0, 0, 0, 0, 0, 1],
+                    ])
+
+        h = alpha/l
+        C = np.cos(alpha)
+        S = np.sin(alpha)
+
+        return np.matrix([
+            [ C,            alpha*S/l,       0, 0, 0,       alpha*(1-C)/l], 
+            [-alpha*S/l,    C,               0, 0, 0,                   S], 
+            [ 0,            0,               1, l, 0,                   0], 
+            [ 0,            0,               0, 1, 0,                   0], 
+            [ S,            alpha*(1 - C)/l, 0, 0, 1, (alpha - S)*alpha/l], 
+            [ 0,            0,               0, 0, 0,                   1], 
+        ])      
+
 class Beamline(list):
     def __init__(self, *args, name=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = name # the name of the beamline
     
     def M(self, s1, s2):
-        # returns the transport matrix from s1 to s2 (s2 can be less than s1)
+        # returns the transport matrix from s1 to s2 (s2 can be less than s1)?
         # s2 could be also a list of values
-        
-        return None
+        if type(s2) is not list: s2 = [s2]
+
+ 
+        matrixes_dict = {}
+
+        for start_s in s2:
+            if s1 < start_s: print("s2 can be less than s1")
+
+            beamline = self[start_s:s1+1]
+            print(f"Beamline: {beamline}")
+
+            res_matrix = np.eye(6)
+
+            for i in range(1, len(beamline)+1):
+                res_matrix = np.matmul(res_matrix, beamline[-i].M())
+
+            matrixes_dict[f"{beamline[0].name} ---> {beamline[-1].name}"] = res_matrix
+
+       
+        return matrixes_dict
