@@ -117,18 +117,18 @@ class Solenoid(DivisibleElement):
             [ 0,       0,       0,      0,       0, 0]
         ])
 
-class Sector_bend(AccElement):
+class Sector_bend(DivisibleElement):
     #Uniform sector bend
-    def __init__(self, *args, h=0, **kwargs):
+    def __init__(self, *args, alpha=0, **kwargs):
         super().__init__(*args, **kwargs)
-        self.h = h #1/m geometrical strenght of sector bending magnet
+        self.alpha = alpha #rad, the angle of bend of central orbit
         self.type_name = "Sector Bend"
 
-    def M(self, L=None):
-        if L is None: L = self.L
+    def M(self, l=None):
+        if l is None: l = self.L
 
-        h = self.h
-        if h == 0: return np.matrix([
+        alpha = self.alpha
+        if alpha == 0: return np.matrix([
                        [1, l, 0, 0, 0, 0],
                        [0, 1, 0, 0, 0, 0],
                        [0, 0, 1, l, 0, 0],
@@ -137,15 +137,15 @@ class Sector_bend(AccElement):
                        [0, 0, 0, 0, 0, 1],
                     ])
 
-        alpha = h * L
+        h = alpha/l
         C = np.cos(alpha)
         S = np.sin(alpha)
 
         return np.matrix([
-            [ C,   S/h,      0, 0, 0,       (1-C)/h], 
-            [-h*S, C,        0, 0, 0,             S], 
-            [ 0,   0,        1, L, 0,             0], 
-            [ 0,   0,        0, 1, 0,             0], 
-            [ S,  (1 - C)/h, 0, 0, 1, (alpha - S)/h], 
-            [ 0,   0,        0, 0, 0,             1], 
+            [ C,            alpha*S/l,       0, 0, 0,       alpha*(1-C)/l], 
+            [-alpha*S/l,    C,               0, 0, 0,                   S], 
+            [ 0,            0,               1, l, 0,                   0], 
+            [ 0,            0,               0, 1, 0,                   0], 
+            [ S,            alpha*(1 - C)/l, 0, 0, 1, (alpha - S)*alpha/l], 
+            [ 0,            0,               0, 0, 0,                   1], 
         ])      
