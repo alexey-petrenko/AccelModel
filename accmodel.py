@@ -127,7 +127,7 @@ class Solenoid(DivisibleElement):
             [ 0,       0,       0,      0,       0, 0]
         ])
 
-class Sector_bend(DivisibleElement):
+class SectorBend(DivisibleElement):
     #Uniform sector bend
     def __init__(self, *args, alpha=0, **kwargs):
         super().__init__(*args, **kwargs)
