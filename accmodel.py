@@ -156,5 +156,4 @@ class Beamline(list):
     def M(self, s1, s2):
         # returns the transport matrix from s1 to s2 (s2 can be less than s1)
         # s2 could be also a list of values
-        
-        return None
+        return self[s1]
