@@ -154,6 +154,25 @@ class Beamline(list):
         self.name = name # the name of the beamline
     
     def M(self, s1, s2):
-        # returns the transport matrix from s1 to s2 (s2 can be less than s1)
+        # returns the transport matrix from s1 to s2 (s2 can be less than s1)?
         # s2 could be also a list of values
-        return self[s1]
+        if type(s2) is not list: s2 = [s2]
+
+ 
+        matrixes_dict = {}
+
+        for start_s in s2:
+            if s1 < start_s: print("s2 can be less than s1")
+
+            beamline = self[start_s:s1+1]
+            print(f"Beamline: {beamline}")
+
+            res_matrix = np.eye(6)
+
+            for i in range(1, len(beamline)+1):
+                res_matrix = np.matmul(res_matrix, beamline[-i].M())
+
+            matrixes_dict[f"{beamline[0].name} ---> {beamline[-1].name}"] = res_matrix
+
+       
+        return matrixes_dict

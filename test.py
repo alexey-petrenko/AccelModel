@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import accmodel as am
+import numpy as np
 
 Q1 = am.Quadrupole(L=0.2, K1=2.0, name="Q1")
 Q2 = am.Quadrupole(L=0.2, K1=-2.0, name="Q2", s=1.0)
@@ -34,3 +35,17 @@ Q2.s = -1.0
 chan.sort()
 
 print(chan)
+
+s2, s1 = [0,1], 2
+tracking_matrixes_from_Beamline = chan.M(s1, s2)
+
+tracking_matrix_handmade0 = np.matmul(chan[2].M(), chan[1].M())
+tracking_matrix_handmade1 = np.matmul(tracking_matrix_handmade0, chan[0].M()) 
+
+print(chan[0:2+1])
+print(tracking_matrixes_from_Beamline['Q2 ---> Sol1'] == tracking_matrix_handmade1) 
+print(chan[1:2+1])
+print(tracking_matrixes_from_Beamline['Q1 ---> Sol1'] == tracking_matrix_handmade0) 
+print(f"transport matrixes = \n{tracking_matrixes_from_Beamline}\n")
+#print(trans_matrix_from_Beamline)
+print(tracking_matrixes_from_Beamline.keys())
