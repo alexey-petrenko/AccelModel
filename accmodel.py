@@ -7,6 +7,16 @@ class AccElement:
         self.name = name
         self.type_name = None
         
+    def __lt__(self, other):
+        # to sort elements according to their location
+        return self.s < other.s
+    
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f"{self.type_name}.{self.name}"
+    
     def M(self):
         L = self.L
         return np.matrix([
@@ -117,7 +127,6 @@ class Solenoid(DivisibleElement):
             [ 0,       0,       0,      0,       0, 0]
         ])
 
-<<<<<<< HEAD:elements.py
 class Sector_bend(DivisibleElement):
     #Uniform sector bend
     def __init__(self, *args, alpha=0, **kwargs):
@@ -150,7 +159,7 @@ class Sector_bend(DivisibleElement):
             [ S,            alpha*(1 - C)/l, 0, 0, 1, (alpha - S)*alpha/l], 
             [ 0,            0,               0, 0, 0,                   1], 
         ])      
-=======
+
 class Beamline(list):
     def __init__(self, *args, name=None, **kwargs):
         super().__init__(*args, **kwargs)
@@ -160,4 +169,3 @@ class Beamline(list):
         # returns matrix from s1 to s2 (s2 can be less than s1)
         
         return None
->>>>>>> 3614162c5f0cf0191ff5952eb8b47bfe14032c77:accmodel.py
