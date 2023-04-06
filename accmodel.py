@@ -165,7 +165,6 @@ class Beamline(list):
             if s1 < start_s: print("s2 can be less than s1")
 
             beamline = self[start_s:s1+1]
-            print(f"Beamline: {beamline}")
 
             res_matrix = np.eye(6)
 
