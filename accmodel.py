@@ -7,6 +7,16 @@ class AccElement:
         self.name = name
         self.type_name = None
         
+    def __lt__(self, other):
+        # to sort elements according to their location
+        return self.s < other.s
+    
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f"{self.type_name}.{self.name}"
+    
     def M(self):
         L = self.L
         return np.matrix([
