@@ -2,11 +2,21 @@ import numpy as np
 
 class AccElement:
     def __init__(self, L=0, s=0, name=None):
-        self.L         = L # m
-        self.s         = s  # m -- location of the element center along the beamline
-        self.name      = name
+        self.L = L # m
+        self.s = s  # m -- location of the element center along the beamline
+        self.name = name
         self.type_name = None
         
+    def __lt__(self, other):
+        # to sort elements according to their location
+        return self.s < other.s
+    
+    def __str__(self):
+        return self.name
+
+    def __repr__(self):
+        return f"{self.type_name}.{self.name}"
+    
     def M(self):
         L = self.L
         return np.matrix([
@@ -83,7 +93,7 @@ class Quadrupole(DivisibleElement):
         return None
 
 class Solenoid(DivisibleElement):
-    def __init__(self, K=0, *args, **kwargs):
+    def __init__(self, *args, K=0, **kwargs):
         super().__init__(*args, **kwargs)
         self.K         = K # 1/m geometrical strength of solenoid
         self.type_name = "Solenoid"
@@ -117,7 +127,7 @@ class Solenoid(DivisibleElement):
             [ 0,       0,       0,      0,       0, 0]
         ])
 
-class Sector_bend(DivisibleElement):
+class SectorBend(DivisibleElement):
     #Uniform sector bend
     def __init__(self, *args, alpha=0, **kwargs):
         super().__init__(*args, **kwargs)
@@ -150,15 +160,12 @@ class Sector_bend(DivisibleElement):
             [ 0,            0,               0, 0, 0,                   1], 
         ])      
 
-class Beamline():
-    def __init__(self, elems_tuple, beam_params, name):
-        self.elems_tuple = elems_tuple
-        self.beam_params = beam_params
-        self.name        = name
-        self.type_name   = "Beamline"
-
-    def beam_tracking(self, beam_params=None, start_pos=0, end_pos=None):
-        elems_tuple = self.elems_tuple
-
-        if beam_params is None: beam_params = self.beam_params
-        if end_pos     is None: end_pos = len(elems_tuple)
+class Beamline(list):
+    def __init__(self, *args, name=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name # the name of the beamline
+    
+    def M(s1,s2):
+        # returns matrix from s1 to s2 (s2 can be less than s1)
+        
+        return None
