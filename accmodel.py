@@ -165,7 +165,6 @@ class Beamline(list):
             if s1 < start_s: print("s2 can be less than s1")
 
             beamline = self[start_s:s1+1]
-            print(f"Beamline: {beamline}")
 
             res_matrix = np.eye(6)
 
@@ -174,5 +173,17 @@ class Beamline(list):
 
             matrixes_dict[f"{beamline[0].name} ---> {beamline[-1].name}"] = res_matrix
 
+        self.matrixes_dict = matrixes_dict
        
-        return matrixes_dict
+        return None
+    
+    def tracking(self, s1, s2, beam_starting_set):
+        # returns set of parameters of the beam in point s2 (s1 -- begining, s2 -- endindg)
+        # beam_starting_set 
+        pass
+
+class Beam(list):
+    def __init__(self, *args, name=None, start_params=None, transfer_matrixes=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.name = name
+        self.start_params = start_params # name of the set of starting beam parameters 
