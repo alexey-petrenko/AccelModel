@@ -17,6 +17,9 @@ class AccElement:
     def __repr__(self):
         return f"{self.type_name}.{self.name}"
     
+    PrevElement = None
+    NextElement = None
+    
     def M(self, l=None):
         # l is the distance to the element start (inside the element)
         if l is None: l = self.L
@@ -152,27 +155,33 @@ class Beamline(list):
     def __init__(self, *args, name=None, **kwargs):
         super().__init__(*args, **kwargs)
         self.name = name # the name of the beamline
+        
+    ElementLocations = None
+    ElementStarts    = None
+    ElementEnds      = None
+        
+    def Compile(self):
+        self.sort()
+        
+        PrevElement = None
+        for itm in self:
+            itm.PrevElement = PrevElement
+            if not (PrevElement is None):
+                PrevElement.NextElement = itm
+            PrevElement = itm
+        
+        self.ElementLocations = np.array([itm.s for itm in self])
+        self.ElementStarts    = np.array([itm.s-itm.L/2 for itm in self])
+        self.ElementEnds      = np.array([itm.s+itm.L/2 for itm in self])
+        
+    def Element_at(self, s):
+        result = None
+        
+        i = np.where( (s > self.ElementStarts) & (s < self.ElementEnds))[0]
+        if len(i) > 0: return self[i[0]]
+        return None
     
     def M(self, s1, s2):
-        # returns the transport matrix from s1 to s2 (s2 can be less than s1)?
-        # s2 could be also a list of values
-        if type(s2) is not list: s2 = [s2]
-
- 
-        matrixes_dict = {}
-
-        for start_s in s2:
-            if s1 < start_s: print("s2 can be less than s1")
-
-            beamline = self[start_s:s1+1]
-            print(f"Beamline: {beamline}")
-
-            res_matrix = np.eye(6)
-
-            for i in range(1, len(beamline)+1):
-                res_matrix = np.matmul(res_matrix, beamline[-i].M())
-
-            matrixes_dict[f"{beamline[0].name} ---> {beamline[-1].name}"] = res_matrix
-
-       
-        return matrixes_dict
+        # returns the transport matrix from s1 to s2.
+                                
+        return None
