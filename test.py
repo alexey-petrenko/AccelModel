@@ -21,31 +21,25 @@ print(f"S_bend1 matrix = \n{S_bend1.M()}\n")
 # create beamline:
 
 chan = am.Beamline([Q1,Q2], name="channel 1")
+chan.Compile()
 
 print(chan)
 
 chan.append(Sol1)
+chan.Compile()
 
 print(chan)
 
-#input("Press Enter to Exit.")
 
 Q2.s = -1.0
-
-chan.sort()
-
+chan.Compile()
 print(chan)
 
-s2, s1 = [0,1], 2
-tracking_matrixes_from_Beamline = chan.M(s1, s2)
+print(f"chan.Element_at(0) = {chan.Element_at(0)}")
+print(f"chan.Element_at(2.1) = {chan.Element_at(2.1)}")
+print(f"chan.Element_at(20.0) = {chan.Element_at(20.0)}")
 
-tracking_matrix_handmade0 = np.matmul(chan[2].M(), chan[1].M())
-tracking_matrix_handmade1 = np.matmul(tracking_matrix_handmade0, chan[0].M()) 
 
-print(chan[0:2+1])
-print(tracking_matrixes_from_Beamline['Q2 ---> Sol1'] == tracking_matrix_handmade1) 
-print(chan[1:2+1])
-print(tracking_matrixes_from_Beamline['Q1 ---> Sol1'] == tracking_matrix_handmade0) 
-print(f"transport matrixes = \n{tracking_matrixes_from_Beamline}\n")
-#print(trans_matrix_from_Beamline)
-print(tracking_matrixes_from_Beamline.keys())
+
+
+
